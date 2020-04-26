@@ -33,7 +33,7 @@ namespace VisitorPattern
         }
 
         [Test]
-        public void Test_visitor()
+        public void Visitor_pattern_OK()
         {
             Shape circle = new Circle();
             var result = circle.Accept(new Exporter());
@@ -46,7 +46,7 @@ namespace VisitorPattern
     {
         public virtual string Accept(Exporter exporter)
         {
-            return exporter.Visit(this);
+            return exporter.Export(this);
         }
     }
 
@@ -54,7 +54,7 @@ namespace VisitorPattern
     {
         public override string Accept(Exporter exporter)
         {
-            return exporter.Visit(this);
+            return exporter.Export(this);
         }
     }
 
@@ -66,16 +66,6 @@ namespace VisitorPattern
         }
 
         public string Export(Circle circle)
-        {
-            return "Export circle";
-        }
-
-        public string Visit(Shape shape)
-        {
-            return "Export shape";
-        }
-
-        public string Visit(Circle shape)
         {
             return "Export circle";
         }
