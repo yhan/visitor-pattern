@@ -1,14 +1,19 @@
-using System;
 using NFluent;
 using NUnit.Framework;
 
 namespace VisitorPattern
 {
+
+    /// <summary>
+    /// Ref:
+    ///     https://refactoring.guru/design-patterns/visitor-double-dispatch
+    ///     https://en.wikipedia.org/wiki/Double_dispatch
+    /// </summary>
     [TestFixture]
     public class ShapesShould
     {
         [Test]
-        public void Test1()
+        public void Double_dispatch_failure()
         {
             var exporter = new Exporter();
             Shape circle = new Circle();
@@ -18,7 +23,7 @@ namespace VisitorPattern
         }
 
         [Test]
-        public void Test2()
+        public void Static_typing_OK()
         {
             var exporter = new Exporter();
             var circle = new Circle();
@@ -26,14 +31,31 @@ namespace VisitorPattern
 
             Check.That(result).IsEqualTo("Export circle");
         }
+
+        [Test]
+        public void Test_visitor()
+        {
+            Shape circle = new Circle();
+            var result = circle.Accept(new Exporter());
+
+            Check.That(result).IsEqualTo("Export circle");
+        }
     }
 
     class Shape
     {
+        public virtual string Accept(Exporter exporter)
+        {
+            return exporter.Visit(this);
+        }
     }
 
     internal class Circle : Shape
     {
+        public override string Accept(Exporter exporter)
+        {
+            return exporter.Visit(this);
+        }
     }
 
     class Exporter
@@ -44,6 +66,16 @@ namespace VisitorPattern
         }
 
         public string Export(Circle circle)
+        {
+            return "Export circle";
+        }
+
+        public string Visit(Shape shape)
+        {
+            return "Export shape";
+        }
+
+        public string Visit(Circle shape)
         {
             return "Export circle";
         }
